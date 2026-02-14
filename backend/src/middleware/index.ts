@@ -176,13 +176,18 @@ export function rateLimitMiddleware(
  */
 export function corsMiddleware() {
   return (req: Request, res: Response, next: NextFunction): void => {
-    const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000').split(
-      ','
-    );
-    const origin = req.headers.origin;
+    const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:3000';
+    
+    // Support wildcard
+    if (corsOrigin === '*') {
+      res.header('Access-Control-Allow-Origin', '*');
+    } else {
+      const allowedOrigins = corsOrigin.split(',');
+      const origin = req.headers.origin;
 
-    if (origin && allowedOrigins.includes(origin)) {
-      res.header('Access-Control-Allow-Origin', origin);
+      if (origin && allowedOrigins.includes(origin)) {
+        res.header('Access-Control-Allow-Origin', origin);
+      }
     }
 
     res.header('Access-Control-Allow-Credentials', 'true');
