@@ -66,6 +66,30 @@ router.get(
 );
 
 /**
+ * GET /api/users/me
+ * Get current authenticated user's profile
+ */
+router.get(
+  '/me',
+  authMiddleware,
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    if (!req.userId) {
+      throw HttpErrors.Unauthorized('No user ID in token');
+    }
+
+    const user = await UserRepository.findPublicProfile(req.userId);
+    if (!user) {
+      throw HttpErrors.NotFound('User not found');
+    }
+
+    res.json({
+      success: true,
+      data: { user },
+    });
+  })
+);
+
+/**
  * GET /api/users/:userId
  * Get user profile by ID
  */
