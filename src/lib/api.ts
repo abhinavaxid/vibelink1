@@ -3,7 +3,7 @@
  * Handles all communication with the VibeLink backend
  */
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_URL = '';
 
 interface ApiRequestOptions extends RequestInit {
     token?: string;
